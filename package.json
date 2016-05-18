@@ -1,0 +1,29 @@
+{
+  "name": "ideman-cli",
+  "version": "1.0.0",
+  "description": "Node command line tool to automate database creation",
+  "main": "./lib/index.js",
+  "scripts": {
+    "start": "node ./lib/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/thinkingmik/ideman-cli.git"
+  },
+  "keywords": [
+    "tool",
+    "ideman",
+    "automation",
+    "database",
+    "command"
+  ],
+  "author": "Michele Andreoli <michi.andreoli@gmail.com> (https://github.com/thinkingmik)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/thinkingmik/ideman-cli/issues"
+  },
+  "homepage": "https://github.com/thinkingmik/ideman-cli#readme",
+  "dependencies": {
+    "commander": "^2.9.0"
+  }
+}
