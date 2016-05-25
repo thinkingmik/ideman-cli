@@ -11,11 +11,13 @@
     "url": "https://github.com/thinkingmik/ideman-cli.git"
   },
   "keywords": [
-    "tool",
     "ideman",
+    "ideman-acl",
     "automation",
     "database",
-    "command"
+    "client",
+    "command",
+    "tool"
   ],
   "author": "Michele Andreoli <michi.andreoli@gmail.com> (https://github.com/thinkingmik)",
   "license": "MIT",
@@ -24,6 +26,7 @@
   },
   "homepage": "https://github.com/thinkingmik/ideman-cli#readme",
   "dependencies": {
-    "commander": "^2.9.0"
+    "commander": "^2.9.0",
+    "knex": "^0.11.4"
   }
 }
