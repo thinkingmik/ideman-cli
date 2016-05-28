@@ -1,0 +1,20 @@
+{
+  "current": "production",
+  "development": {
+    "database": {
+      "client": "pg",
+      "connection": "postgres://postgres:postgres@localhost:5432/test?charset=utf-8&ssl=true"
+    }
+  },
+  "production": {
+    "database": {
+      "client": "mysql",
+      "connection": {
+        "host": "localhost",
+        "user": "root",
+        "password": "root",
+        "database": "ideman"
+      }
+    }
+  }
+}
