@@ -1,4 +1,4 @@
-Identity Manager Command Line Tool
+Identity Manager Command Line Interface Tool
 ================
 Tool for creation of database schemas and others boring jobs usefull for [`ideman`](https://github.com/thinkingmik/ideman) and [`ideman-acl`](https://github.com/thinkingmik/ideman-acl) node modules.
 
