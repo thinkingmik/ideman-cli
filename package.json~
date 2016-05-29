@@ -3,7 +3,10 @@
   "version": "1.0.0",
   "description": "Node command line tool to automate database creation",
   "bin": {
-    "ideman-cli": "./bin/index.js"
+    "ideman-cli": "./lib/index.js"
+  },
+  "scripts": {
+    "start": "node ./lib/index.js"
   },
   "repository": {
     "type": "git",
