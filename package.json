@@ -28,7 +28,7 @@
   },
   "homepage": "https://github.com/thinkingmik/ideman-cli#readme",
   "dependencies": {
-    "bcrypt": "^0.8.6",
+    "bcrypt-nodejs": "0.0.3",
     "bluebird": "^3.4.0",
     "commander": "^2.9.0",
     "crypto": "0.0.3",

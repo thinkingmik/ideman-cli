@@ -1,5 +1,5 @@
 {
-  "current": "production",
+  "current": "development",
   "development": {
     "database": {
       "client": "pg",
