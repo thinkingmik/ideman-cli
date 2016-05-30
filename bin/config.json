@@ -1,38 +1,34 @@
 {
-  "current": "development",
-  "development": {
-    "database": {
-      "client": "pg",
-      "connection": "postgres://postgres:postgres@localhost:5432/test?charset=utf-8&ssl=true"
-    },
-    "crypto": {
-      "key": "o!rDE(Qbrq7u4OV",
-      "inputEncoding": "utf8",
-      "outputEncoding": "base64"
-    },
-    "applications": [
-      "ideman",
-      "ideman-acl"
-    ]
-  },
-  "production": {
-    "database": {
-      "client": "mysql",
-      "connection": {
-        "host": "localhost",
-        "user": "root",
-        "password": "root",
-        "database": "ideman"
+  "tables": {
+    "prefix": "",
+    "entities": {
+      "user": {
+        "table": "users"
+      },
+      "client": {
+        "table": "clients"
+      },
+      "token": {
+        "table": "tokens"
+      },
+      "code": {
+        "table": "codes"
+      },
+      "userRole": {
+        "table": "usersRoles"
+      },
+      "role": {
+        "table": "roles"
+      },
+      "resource": {
+        "table": "resources"
+      },
+      "permission": {
+        "table": "permissions"
+      },
+      "policy": {
+        "table": "policies"
       }
-    },
-    "applications": [
-      "ideman",
-      "ideman-acl"
-    ],
-    "crypto": {
-      "key": "o!rDE(Qbrq7u4OV",
-      "inputEncoding": "utf8",
-      "outputEncoding": "base64"
     }
   }
 }

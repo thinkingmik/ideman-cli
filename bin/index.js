@@ -1,7 +1,7 @@
 #! /usr/bin/env node
 var _ = require('underscore');
 var program = require('commander');
-var Configuration = require('./configuration')('./config.json');
+var Configuration = require('./configuration');
 var Promise = require('bluebird');
 var create = require('./scripts/createTables');
 var drop = require('./scripts/dropTables');
@@ -15,6 +15,30 @@ var printError = function(msg) {
 
 var printSuccess = function(msg) {
   console.log(msg);
+}
+
+var manageTablesArguments = function(arg) {
+  if (!arg) {
+    Configuration.initTables()
+      .then(function(ret) {
+        printSuccess(ret);
+      })
+      .catch(function(err) {
+        printError(err.message);
+        process.exit(1);
+      });
+  }
+  else if (arg === 'list') {
+    var settings = Configuration.getTableConfig();
+    if (settings) {
+      printSuccess(settings);
+      process.exit(0);
+    }
+    else {
+      printError('No tables config found');
+      process.exit(1);
+    }
+  }
 }
 
 var manageConfigArguments = function(arg, key) {
@@ -70,17 +94,21 @@ var manageConfigArguments = function(arg, key) {
 
 var initOption = function(val, force) {
   var prompt = inquirer.createPromptModule();
-  var initQuestions = [
-    {
-      type: 'confirm',
-      name: 'drop',
-      message: 'Are you sure to drop all tables',
-      default: false
-    }
-  ];
+  var initQuestions = [];
+
+  if (force) {
+    initQuestions = [
+      {
+        type: 'confirm',
+        name: 'drop',
+        message: 'Are you sure to drop all tables',
+        default: false
+      }
+    ];
+  }
   prompt(initQuestions)
     .then(function(key, value) {
-      if (!key.drop) {
+      if (key.drop === false) {
         printSuccess('No tables dropped');
         process.exit(0);
       }
@@ -98,7 +126,6 @@ var initOption = function(val, force) {
               return create.idemanTables();
             })
             .then(function() {
-              printSuccess('Jobs completed');
               process.exit(0);
             })
             .catch(function(err) {
@@ -119,7 +146,6 @@ var initOption = function(val, force) {
               return create.idemanAclTables();
             })
             .then(function() {
-              printSuccess('Jobs completed');
               process.exit(0);
             })
             .catch(function(err) {
@@ -154,7 +180,6 @@ var initOption = function(val, force) {
               }
             })
             .then(function() {
-              printSuccess('Jobs completed');
               process.exit(0);
             })
             .catch(function(err) {
@@ -280,7 +305,6 @@ var manageOptions = function(program) {
           printSuccess('No tables dropped');
           process.exit(0);
         }
-        printSuccess('Completed');
         process.exit(0);
       })
       .catch(function(err) {
@@ -325,8 +349,11 @@ program.version('1.0.0')
       manageConfigArguments(arg, key);
       configLaunched = true;
     }
+    else if (cmd === 'tables') {
+      manageTablesArguments(arg);
+    }
     else {
-      printError('Command must be one of: config');
+      printError('Command must be one of: config, tables');
       process.exit(1);
     }
   })
@@ -339,7 +366,7 @@ program.version('1.0.0')
   .parse(process.argv);
 
 var configExists = Configuration.checkConfig();
-if (configExists === false && configLaunched === false) {
+if (process.args && configExists === false && configLaunched === false) {
   Configuration.initConfig()
     .then(function(ret) {
       manageOptions(program);

@@ -1,54 +1,100 @@
-var Configuration = require('../configuration')('./config.json');
-var prefix = 'idm_';
+var Configuration = require('../configuration');
 
 var dropsIdemanTables = function() {
   return new Promise(function(resolve, reject) {
     var config = Configuration.getConfig();
+    var tables = Configuration.getTableConfig();
+    var prefix = Configuration.getTablePrefix();
     var knex = require('knex')(config.database);
 
     return knex.raw('')
-      .then(function() {
-        console.log('[DROP] Dropping policies table');
-        return knex.schema.dropTableIfExists(prefix + 'policies');
-      })
-      .then(function() {
-        console.log('[DROP] Dropping permissions table');
-        return knex.schema.dropTableIfExists(prefix + 'permissions');
-      })
-      .then(function() {
-        console.log('[DROP] Dropping resources table');
-        return knex.schema.dropTableIfExists(prefix + 'resources');
-      })
-      .then(function() {
-        console.log('[DROP] Dropping codes table');
-        return knex.schema.dropTableIfExists(prefix + 'codes');
-      })
-      .then(function() {
-        console.log('[DROP] Dropping tokens table');
-        return knex.schema.dropTableIfExists(prefix + 'tokens');
-      })
-      .then(function() {
-        console.log('[DROP] Dropping clients table');
-        return knex.schema.dropTableIfExists(prefix + 'clients');
-      })
-      .then(function() {
-        console.log('[DROP] Dropping usersRoles table');
-        return knex.schema.dropTableIfExists(prefix + 'usersRoles');
-      })
-      .then(function() {
-        console.log('[DROP] Dropping roles table');
-        return knex.schema.dropTableIfExists(prefix + 'roles');
-      })
-      .then(function() {
-        console.log('[DROP] Dropping users table');
-        return knex.schema.dropTableIfExists(prefix + 'users');
-      })
-      .then(function() {
-        return resolve(true);
-      })
-      .catch(function(err) {
-        return reject(err);
+    .then(function() {
+      return knex.schema.hasTable(prefix + tables.policy.table)
+      .then(function(exists) {
+        if (exists) {
+          console.log('[DROP] Dropping ' + tables.policy.table + ' table');
+          return knex.schema.dropTable(prefix + tables.policy.table);
+        }
       });
+    })
+    .then(function() {
+      return knex.schema.hasTable(prefix + tables.permission.table)
+      .then(function(exists) {
+        if (exists) {
+          console.log('[DROP] Dropping ' + tables.permission.table + ' table');
+          return knex.schema.dropTableIfExists(prefix + tables.permission.table);
+        }
+      });
+    })
+    .then(function() {
+      return knex.schema.hasTable(prefix + tables.resource.table)
+      .then(function(exists) {
+        if (exists) {
+          console.log('[DROP] Dropping ' + tables.resource.table + ' table');
+          return knex.schema.dropTableIfExists(prefix + tables.resource.table);
+        }
+      });
+    })
+    .then(function() {
+      return knex.schema.hasTable(prefix + tables.code.table)
+      .then(function(exists) {
+        if (exists) {
+          console.log('[DROP] Dropping ' + tables.code.table + ' table');
+          return knex.schema.dropTableIfExists(prefix + tables.code.table);
+        }
+      });
+    })
+    .then(function() {
+      return knex.schema.hasTable(prefix + tables.token.table)
+      .then(function(exists) {
+        if (exists) {
+          console.log('[DROP] Dropping ' + tables.token.table + ' table');
+          return knex.schema.dropTableIfExists(prefix + tables.token.table);
+        }
+      });
+    })
+    .then(function() {
+      return knex.schema.hasTable(prefix + tables.client.table)
+      .then(function(exists) {
+        if (exists) {
+          console.log('[DROP] Dropping ' + tables.client.table + ' table');
+          return knex.schema.dropTableIfExists(prefix + tables.client.table);
+        }
+      });
+    })
+    .then(function() {
+      return knex.schema.hasTable(prefix + tables.userRole.table)
+      .then(function(exists) {
+        if (exists) {
+          console.log('[DROP] Dropping ' + tables.userRole.table + ' table');
+          return knex.schema.dropTableIfExists(prefix + tables.userRole.table);
+        }
+      });
+    })
+    .then(function() {
+      return knex.schema.hasTable(prefix + tables.role.table)
+      .then(function(exists) {
+        if (exists) {
+          console.log('[DROP] Dropping ' + tables.role.table + ' table');
+          return knex.schema.dropTableIfExists(prefix + tables.role.table);
+        }
+      });
+    })
+    .then(function() {
+      return knex.schema.hasTable(prefix + tables.user.table)
+      .then(function(exists) {
+        if (exists) {
+          console.log('[DROP] Dropping ' + tables.user.table + ' table');
+          return knex.schema.dropTableIfExists(prefix + tables.user.table);
+        }
+      });
+    })
+    .then(function() {
+      return resolve(true);
+    })
+    .catch(function(err) {
+      return reject(err);
+    });
   });
 }
 
