@@ -35,12 +35,12 @@ var decypherText = function(text, secretKey, inputEncoding, outputEncoding) {
 
 var cryptText = function(text) {
   return bcrypt.genSaltAsync(5)
-    .then(function (salt) {
-      return bcrypt.hashAsync(text, salt, null);
-    })
-    .then(function (hash) {
-      return hash;
-    });
+  .then(function (salt) {
+    return bcrypt.hashAsync(text, salt, null);
+  })
+  .then(function (hash) {
+    return hash;
+  });
 }
 
 module.exports.cypher = cypherText;

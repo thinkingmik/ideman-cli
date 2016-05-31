@@ -3,25 +3,22 @@ var Configuration = require('../configuration');
 var dropsIdemanTables = function() {
   return new Promise(function(resolve, reject) {
     var config = Configuration.getConfig();
-    var tables = Configuration.getTableConfig();
-    var prefix = Configuration.getTablePrefix();
+    var tables = config.tables.entities;
+    var prefix = config.tables.prefix;
     var knex = require('knex')(config.database);
 
-    return knex.raw('')
-    .then(function() {
-      return knex.schema.hasTable(prefix + tables.policy.table)
-      .then(function(exists) {
-        if (exists) {
-          console.log('[DROP] Dropping ' + tables.policy.table + ' table');
-          return knex.schema.dropTable(prefix + tables.policy.table);
-        }
-      });
+    return knex.schema.hasTable(prefix + tables.policy.table)
+    .then(function(exists) {
+      if (exists) {
+        console.log('[DROP] drop ' + tables.policy.table + ' table');
+        return knex.schema.dropTable(prefix + tables.policy.table);
+      }
     })
     .then(function() {
       return knex.schema.hasTable(prefix + tables.permission.table)
       .then(function(exists) {
         if (exists) {
-          console.log('[DROP] Dropping ' + tables.permission.table + ' table');
+          console.log('[DROP] drop ' + tables.permission.table + ' table');
           return knex.schema.dropTableIfExists(prefix + tables.permission.table);
         }
       });
@@ -30,7 +27,7 @@ var dropsIdemanTables = function() {
       return knex.schema.hasTable(prefix + tables.resource.table)
       .then(function(exists) {
         if (exists) {
-          console.log('[DROP] Dropping ' + tables.resource.table + ' table');
+          console.log('[DROP] drop ' + tables.resource.table + ' table');
           return knex.schema.dropTableIfExists(prefix + tables.resource.table);
         }
       });
@@ -39,7 +36,7 @@ var dropsIdemanTables = function() {
       return knex.schema.hasTable(prefix + tables.code.table)
       .then(function(exists) {
         if (exists) {
-          console.log('[DROP] Dropping ' + tables.code.table + ' table');
+          console.log('[DROP] drop ' + tables.code.table + ' table');
           return knex.schema.dropTableIfExists(prefix + tables.code.table);
         }
       });
@@ -48,7 +45,7 @@ var dropsIdemanTables = function() {
       return knex.schema.hasTable(prefix + tables.token.table)
       .then(function(exists) {
         if (exists) {
-          console.log('[DROP] Dropping ' + tables.token.table + ' table');
+          console.log('[DROP] drop ' + tables.token.table + ' table');
           return knex.schema.dropTableIfExists(prefix + tables.token.table);
         }
       });
@@ -57,7 +54,7 @@ var dropsIdemanTables = function() {
       return knex.schema.hasTable(prefix + tables.client.table)
       .then(function(exists) {
         if (exists) {
-          console.log('[DROP] Dropping ' + tables.client.table + ' table');
+          console.log('[DROP] drop ' + tables.client.table + ' table');
           return knex.schema.dropTableIfExists(prefix + tables.client.table);
         }
       });
@@ -66,7 +63,7 @@ var dropsIdemanTables = function() {
       return knex.schema.hasTable(prefix + tables.userRole.table)
       .then(function(exists) {
         if (exists) {
-          console.log('[DROP] Dropping ' + tables.userRole.table + ' table');
+          console.log('[DROP] drop ' + tables.userRole.table + ' table');
           return knex.schema.dropTableIfExists(prefix + tables.userRole.table);
         }
       });
@@ -75,7 +72,7 @@ var dropsIdemanTables = function() {
       return knex.schema.hasTable(prefix + tables.role.table)
       .then(function(exists) {
         if (exists) {
-          console.log('[DROP] Dropping ' + tables.role.table + ' table');
+          console.log('[DROP] drop ' + tables.role.table + ' table');
           return knex.schema.dropTableIfExists(prefix + tables.role.table);
         }
       });
@@ -84,7 +81,7 @@ var dropsIdemanTables = function() {
       return knex.schema.hasTable(prefix + tables.user.table)
       .then(function(exists) {
         if (exists) {
-          console.log('[DROP] Dropping ' + tables.user.table + ' table');
+          console.log('[DROP] drop ' + tables.user.table + ' table');
           return knex.schema.dropTableIfExists(prefix + tables.user.table);
         }
       });

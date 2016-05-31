@@ -5,8 +5,7 @@ var inquirer = require('inquirer');
 var Promise = require('bluebird');
 
 function Configuration() {
-  this._file = './config.json';
-  this._default =  './default.json';
+  this._file = './configs/config.json';
   nconf.env().argv();
   nconf.file(this._file);
   this._environment = nconf.get('current') || 'development';
@@ -92,20 +91,20 @@ Configuration.prototype.initConfig = function() {
       {
         type: 'input',
         name: 'cryptoKey',
-        message: 'Secret cypher key (watch your ideman settings or use default)',
-        default: nconf.get(env + ':crypto:key') || 'o!rDE(Qbrq7u4OV'
+        message: 'Secret cypher key',
+        default: nconf.get(env + ':crypto:key')
       },
       {
         type: 'input',
         name: 'cryptoInputEnc',
         message: 'Input encoding for text cypher',
-        default: nconf.get(env + ':crypto:inputEncoding') || 'utf8'
+        default: nconf.get(env + ':crypto:inputEncoding')
       },
       {
         type: 'input',
         name: 'cryptoOutputEnc',
         message: 'Output encoding for text cypher',
-        default: nconf.get(env + ':crypto:outputEncoding') || 'base64'
+        default: nconf.get(env + ':crypto:outputEncoding')
       },
       {
         type: 'list',
@@ -177,6 +176,7 @@ Configuration.prototype.initConfig = function() {
 
       if (key.dbclient === 'pg') {
         nconf.set(this._environment + ':database:client', key.dbclient);
+        nconf.set(this._environment + ':database:useNullAsDefault', true);
         return prompt(pgQuestions)
         .then(function(key, value) {
           nconf.set(this._environment + ':database:connection', key.connstring);
@@ -184,6 +184,7 @@ Configuration.prototype.initConfig = function() {
       }
       else if (key.dbclient === 'mysql') {
         nconf.set(this._environment + ':database:client', key.dbclient);
+        nconf.set(this._environment + ':database:useNullAsDefault', true);
         return prompt(mysqlQuestions)
         .then(function(key, value) {
           nconf.set(this._environment + ':database:connection:host', key.host);
@@ -195,7 +196,8 @@ Configuration.prototype.initConfig = function() {
       }
       else if (key.dbclient === 'sqlite3') {
         nconf.set(this._environment + ':database:client', key.dbclient);
-        return prompt(mysqlQuestions)
+        nconf.set(this._environment + ':database:useNullAsDefault', true);
+        return prompt(sqliteQuestions)
         .then(function(key, value) {
           nconf.set(this._environment + ':database:connection:host', '');
           nconf.set(this._environment + ':database:connection:user', '');
@@ -219,12 +221,130 @@ Configuration.prototype.initConfig = function() {
   });
 }
 
-Configuration.prototype.deleteConfig = function(key) {
-  var def = this._default;
+Configuration.prototype.initTables = function() {
+  var env = this._environment;
+
+  return new Promise(function(resolve, reject) {
+    var prompt = inquirer.createPromptModule();
+
+    var initQuestions = [
+      {
+        type: 'input',
+        name: 'user',
+        message: 'User table name',
+        default: nconf.get(env + ':tables:entities:user:table')
+      },
+      {
+        type: 'input',
+        name: 'client',
+        message: 'Client table name',
+        default: nconf.get(env + ':tables:entities:client:table')
+      },
+      {
+        type: 'input',
+        name: 'token',
+        message: 'Token table name',
+        default: nconf.get(env + ':tables:entities:token:table')
+      },
+      {
+        type: 'input',
+        name: 'code',
+        message: 'Code table name',
+        default: nconf.get(env + ':tables:entities:code:table')
+      },
+      {
+        type: 'input',
+        name: 'role',
+        message: 'Role table name',
+        default: nconf.get(env + ':tables:entities:role:table')
+      },
+      {
+        type: 'input',
+        name: 'userRole',
+        message: 'UserRole table name',
+        default: nconf.get(env + ':tables:entities:userRole:table')
+      },
+      {
+        type: 'input',
+        name: 'resource',
+        message: 'Resource table name',
+        default: nconf.get(env + ':tables:entities:resource:table')
+      },
+      {
+        type: 'input',
+        name: 'permission',
+        message: 'Permission table name',
+        default: nconf.get(env + ':tables:entities:permission:table')
+      },
+      {
+        type: 'input',
+        name: 'policy',
+        message: 'Policy table name',
+        default: nconf.get(env + ':tables:entities:policy:table')
+      }
+    ];
+
+    prompt(initQuestions)
+    .then(function(key, value) {
+      nconf.set(env + ':tables:prefix', '');
+      nconf.set(env + ':tables:entities:user:table', key.user);
+      nconf.set(env + ':tables:entities:client:table', key.client);
+      nconf.set(env + ':tables:entities:token:table', key.token);
+      nconf.set(env + ':tables:entities:code:table', key.code);
+      nconf.set(env + ':tables:entities:role:table', key.role);
+      nconf.set(env + ':tables:entities:userRole:table', key.userRole);
+      nconf.set(env + ':tables:entities:resource:table', key.resource);
+      nconf.set(env + ':tables:entities:permission:table', key.permission);
+      nconf.set(env + ':tables:entities:policy:table', key.policy);
+    })
+    .then(function() {
+      nconf.save(function (err) {
+        if (err) {
+          return reject(err);
+        }
+        return resolve('Tables configuration saved successfully');
+      });
+    })
+    .catch(function(err) {
+      return reject(err);
+    });
+  });
+}
+
+Configuration.prototype.resetConfig = function(key) {
   return new Promise(function(resolve, reject) {
     nconf.reset(function() {
-      var data = fs.readFileSync(def);
-      nconf.set('tables', JSON.parse(data));
+      nconf.set('current', 'development');
+      nconf.set('development:applications', null);
+      nconf.set('development:crypto:key', 'o!rDE(Qbrq7u4OV');
+      nconf.set('development:crypto:inputEncoding', 'utf8');
+      nconf.set('development:crypto:outputEncoding', 'base64');
+      nconf.set('development:database', null);
+      nconf.set('development:tables:prefix', '');
+      nconf.set('development:tables:entities:user:table', 'users');
+      nconf.set('development:tables:entities:client:table', 'clients');
+      nconf.set('development:tables:entities:token:table', 'tokens');
+      nconf.set('development:tables:entities:code:table', 'codes');
+      nconf.set('development:tables:entities:role:table', 'roles');
+      nconf.set('development:tables:entities:userRole:table', 'usersRoles');
+      nconf.set('development:tables:entities:resource:table', 'resources');
+      nconf.set('development:tables:entities:permission:table', 'permissions');
+      nconf.set('development:tables:entities:policy:table', 'policies');
+      nconf.set('production:applications', null);
+      nconf.set('production:crypto:key', 'o!rDE(Qbrq7u4OV');
+      nconf.set('production:crypto:inputEncoding', 'utf8');
+      nconf.set('production:crypto:outputEncoding', 'base64');
+      nconf.set('production:database', null);
+      nconf.set('production:tables:prefix', '');
+      nconf.set('production:tables:entities:user:table', 'users');
+      nconf.set('production:tables:entities:client:table', 'clients');
+      nconf.set('production:tables:entities:token:table', 'tokens');
+      nconf.set('production:tables:entities:code:table', 'codes');
+      nconf.set('production:tables:entities:role:table', 'roles');
+      nconf.set('production:tables:entities:userRole:table', 'usersRoles');
+      nconf.set('production:tables:entities:resource:table', 'resources');
+      nconf.set('production:tables:entities:permission:table', 'permissions');
+      nconf.set('production:tables:entities:policy:table', 'policies');
       nconf.save(function (err) {
         if (err) {
           return reject(err);
@@ -247,106 +367,11 @@ Configuration.prototype.getConfig = function(key) {
 }
 
 Configuration.prototype.checkConfig = function() {
-  var db = nconf.get(this._environment);
+  var db = nconf.get(this._environment + ':database');
   if (!db) {
     return false;
   }
   return true;
-}
-
-Configuration.prototype.initTables = function() {
-  return new Promise(function(resolve, reject) {
-    var prompt = inquirer.createPromptModule();
-
-    var initQuestions = [
-      {
-        type: 'input',
-        name: 'user',
-        message: 'User table name',
-        default: nconf.get('tables:entities:user:table') || 'users'
-      },
-      {
-        type: 'input',
-        name: 'client',
-        message: 'Client table name',
-        default: nconf.get('tables:entities:client:table') || 'clients'
-      },
-      {
-        type: 'input',
-        name: 'token',
-        message: 'Token table name',
-        default: nconf.get('tables:entities:token:table') || 'tokens'
-      },
-      {
-        type: 'input',
-        name: 'code',
-        message: 'Code table name',
-        default: nconf.get('tables:entities:code:table') || 'codes'
-      },
-      {
-        type: 'input',
-        name: 'role',
-        message: 'Role table name',
-        default: nconf.get('tables:entities:role:table') || 'roles'
-      },
-      {
-        type: 'input',
-        name: 'userRole',
-        message: 'UserRole table name',
-        default: nconf.get('tables:entities:userRole:table') || 'usersRoles'
-      },
-      {
-        type: 'input',
-        name: 'resource',
-        message: 'Resource table name',
-        default: nconf.get('tables:entities:resource:table') || 'resources'
-      },
-      {
-        type: 'input',
-        name: 'permission',
-        message: 'Permission table name',
-        default: nconf.get('tables:entities:permission:table') || 'permissions'
-      },
-      {
-        type: 'input',
-        name: 'policy',
-        message: 'Policy table name',
-        default: nconf.get('tables:entities:policy:table') || 'policies'
-      }
-    ];
-
-    prompt(initQuestions)
-    .then(function(key, value) {
-      nconf.set('tables:entities:user:table', key.user);
-      nconf.set('tables:entities:client:table', key.client);
-      nconf.set('tables:entities:token:table', key.token);
-      nconf.set('tables:entities:code:table', key.code);
-      nconf.set('tables:entities:role:table', key.role);
-      nconf.set('tables:entities:userRole:table', key.userRole);
-      nconf.set('tables:entities:resource:table', key.resource);
-      nconf.set('tables:entities:permission:table', key.permission);
-      nconf.set('tables:entities:policy:table', key.policy);
-    })
-    .then(function() {
-      nconf.save(function (err) {
-        if (err) {
-          return reject(err);
-        }
-        return resolve('Tables configuration saved successfully');
-      });
-    })
-    .catch(function(err) {
-      return reject(err);
-    });
-  });
-}
-
-Configuration.prototype.getTableConfig = function() {
-  return nconf.get('tables:entities');
-}
-
-Configuration.prototype.getTablePrefix = function() {
-  return nconf.get('tables:prefix');
 }
 
 exports = module.exports = new Configuration;
