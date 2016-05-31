@@ -1,0 +1,85 @@
+{
+  "current": "development",
+  "development": {
+    "applications": null,
+    "crypto": {
+      "key": "o!rDE(Qbrq7u4OV",
+      "inputEncoding": "utf8",
+      "outputEncoding": "base64"
+    },
+    "database": null,
+    "tables": {
+      "prefix": "",
+      "entities": {
+        "user": {
+          "table": "users"
+        },
+        "client": {
+          "table": "clients"
+        },
+        "token": {
+          "table": "tokens"
+        },
+        "code": {
+          "table": "codes"
+        },
+        "role": {
+          "table": "roles"
+        },
+        "userRole": {
+          "table": "usersRoles"
+        },
+        "resource": {
+          "table": "resources"
+        },
+        "permission": {
+          "table": "permissions"
+        },
+        "policy": {
+          "table": "policies"
+        }
+      }
+    }
+  },
+  "production": {
+    "applications": null,
+    "crypto": {
+      "key": "o!rDE(Qbrq7u4OV",
+      "inputEncoding": "utf8",
+      "outputEncoding": "base64"
+    },
+    "database": null,
+    "tables": {
+      "prefix": "",
+      "entities": {
+        "user": {
+          "table": "users"
+        },
+        "client": {
+          "table": "clients"
+        },
+        "token": {
+          "table": "tokens"
+        },
+        "code": {
+          "table": "codes"
+        },
+        "role": {
+          "table": "roles"
+        },
+        "userRole": {
+          "table": "usersRoles"
+        },
+        "resource": {
+          "table": "resources"
+        },
+        "permission": {
+          "table": "permissions"
+        },
+        "policy": {
+          "table": "policies"
+        }
+      }
+    }
+  }
+}
