@@ -70,7 +70,7 @@ var cratesIdemanTables = function() {
           return knex.schema.createTableIfNotExists(prefix + tables.token.table, function(table) {
             table.bigIncrements('id').primary();
             table.string('token', 512).notNullable().unique();
-            table.string('refresh', 512).notNullable().unique();
+            table.string('refresh', 512).nullable().unique();
             table.string('userAgent', 512).nullable();
             table.string('ipAddress', 39).nullable();
             table.bigInteger('userId').unsigned().index().references('id').inTable(prefix + tables.user.table).onDelete('CASCADE').onUpdate('CASCADE');

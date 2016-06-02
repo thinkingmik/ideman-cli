@@ -105,6 +105,7 @@ var manageInitDbCmd = function (arg, force) {
         return create.idemanAclTables();
       })
       .then(function() {
+        printSuccess('Tables created successfully');
         process.exit(0);
       })
       .catch(function(err) {
@@ -139,6 +140,7 @@ var manageInitDbCmd = function (arg, force) {
         }
       })
       .then(function() {
+        printSuccess('Tables created successfully');
         process.exit(0);
       })
       .catch(function(err) {
@@ -187,6 +189,7 @@ var manageDropDbCmd = function () {
       printSuccess('No tables dropped');
       process.exit(0);
     }
+    printSuccess('Tables dropped successfully');
     process.exit(0);
   })
   .catch(function(err) {
@@ -320,21 +323,118 @@ var manageCryptCmd = function () {
   });
 }
 
+var manageImportCmd = function (filename) {
+  var config = Configuration.getConfig();
+  var automator = new Automator(config);
+  automator.importData(filename)
+  .then(function(ret) {
+    printSuccess(ret);
+    process.exit(0);
+  })
+  .catch(function(err) {
+    printError(err.message);
+    process.exit(1);
+  });
+}
+
 var manageInsertCmd = function (arg) {
+  var config = Configuration.getConfig();
+  var automator = new Automator(config);
+  var promise = null;
   if (arg === 'user') {
-    var config = Configuration.getConfig();
-    var automator = new Automator(config);
-    automator.insertUser();
-    /*
+    promise = automator.getUserData();
+  }
+  else if (arg === 'client') {
+    promise = automator.getClientData();
+  }
+  else if (arg === 'token') {
+    promise = automator.getTokenData();
+  }
+  else if (arg === 'code') {
+    promise = automator.getCodeData();
+  }
+  else if (arg === 'role') {
+    promise = automator.getRoleData();
+  }
+  else if (arg === 'userRole') {
+    promise = automator.getUserRoleData();
+  }
+  else if (arg === 'permission') {
+    promise = automator.getPermissionData();
+  }
+  else if (arg === 'resource') {
+    promise = automator.getResourceData();
+  }
+  else if (arg === 'policy') {
+    promise = automator.getPolicyData();
+  }
+  else {
+    printError('Unknown entity type ' + arg);
+    process.exit(1);
+  }
+  if (promise) {
+    promise
+    .then(function(item) {
+      return automator.insert(item.tablename, item.columns, item.returning);
+    })
     .then(function(ret) {
-      printSuccess(ret);
       process.exit(0);
     })
     .catch(function(err) {
       printError(err.message);
       process.exit(1);
-    });*/
+    });
   }
+}
+
+var manageDeleteCmd = function (arg) {
+  var prompt = inquirer.createPromptModule();
+  var config = Configuration.getConfig();
+  var automator = new Automator(config);
+
+  var secureQuestions = [
+    {
+      type: 'confirm',
+      name: 'drop',
+      message: 'Are you sure to delete all records',
+      default: false
+    }
+  ];
+
+  var entities = ['user', 'client', 'token', 'code', 'role', 'userRole', 'permission', 'resource', 'policy']
+  if (!_.contains(entities, arg)) {
+    printError('Unknown entity type ' + arg);
+    process.exit(1);
+  }
+
+  automator.getClause(arg)
+    .then(function(item) {
+      if (!item.clause) {
+        return prompt(secureQuestions)
+          .then(function(key) {
+            if (key.drop) {
+              return item;
+            }
+            return null;
+          });
+      }
+      return item;
+    })
+    .then(function(item) {
+      if (!item) {
+        printSuccess('No rows deleted');
+        process.exit(0);
+      }
+      return automator.remove(item.tablename, item.clause, item.returning);
+    })
+    .then(function(ret) {
+      printSuccess('Affected rows: ' + ret);
+      process.exit(0);
+    })
+    .catch(function(err) {
+      printError(err.message);
+      process.exit(1);
+    });
 }
 
 program.version('1.0.0')
@@ -395,6 +495,21 @@ program.version('1.0.0')
   else if (cmd === 'crypt') {
     manageCryptCmd();
   }
+  else if (cmd === 'import') {
+    if (Configuration.checkConfig()) {
+      manageImportCmd(arg);
+    }
+    else {
+      Configuration.initConfig()
+      .then(function(ret) {
+        manageImportCmd(arg);
+      })
+      .catch(function(err) {
+        printError(err.message);
+        process.exit(1);
+      });
+    }
+  }
   else if (cmd === 'insert') {
     if (Configuration.checkConfig()) {
       manageInsertCmd(arg);
@@ -410,8 +525,23 @@ program.version('1.0.0')
       });
     }
   }
+  else if (cmd === 'delete') {
+    if (Configuration.checkConfig()) {
+      manageDeleteCmd(arg);
+    }
+    else {
+      Configuration.initConfig()
+      .then(function(ret) {
+        manageDeleteCmd(arg);
+      })
+      .catch(function(err) {
+        printError(err.message);
+        process.exit(1);
+      });
+    }
+  }
   else {
-    printError('Command must be one of: config, tables, reset, init, list, env, switch, cypher, decypher, crypt');
+    printError('Command must be one of: config, tables, reset, init, list, env, switch, insert, delete, import, cypher, decypher, crypt');
     process.exit(1);
   }
 })

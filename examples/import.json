@@ -1,0 +1,80 @@
+{
+	"data": [
+		{
+			"entity": "user",
+			"columns": {
+				"username": "admin",
+				"password": "$2a$05$Sbvj/0fQB/H/GaQZJg88iOP/ppZXTEtwCEF1Iff0hCt1t/PcJIfDa",
+				"email": "admin@node.com",
+				"firstName": "super",
+				"lastName": "administrator"
+			},
+			"returning": "id"
+		},
+		{
+			"entity": "user",
+			"columns": {
+				"username": "e.vedder",
+				"password": "$2a$05$jVlibTPSRqgjKnvvNyM3mOihetNaEawa/HgBBS07xg7bdO/gT4CSe",
+				"email": "e.vedder@node.com",
+				"firstName": "Eddie",
+				"lastName": "Vedder"
+			},
+			"returning": "id"
+		},
+		{
+			"entity": "user",
+			"columns": {
+				"username": "m.mccready",
+				"password": "$2a$05$vF.WQXnjSYkcGSFi6I./zeQ2J.I1DqE3Dj1N2tJOHZ.beM.eXJw.G",
+				"email": "m.mccready@node.com",
+				"firstName": "Mike",
+				"lastName": "McCready"
+			},
+			"returning": "id"
+		},
+		{
+			"entity": "user",
+			"columns": {
+				"username": "j.ament",
+				"password": "$2a$05$fQ4mXW.WDP4ooxcjhwtr3OQYgJMUQpyqqRDzArRX6YLZ6CnxswbU2",
+				"email": "j.ament@node.com",
+				"firstName": "Jeff",
+				"lastName": "Ament"
+			},
+			"returning": "id"
+		},
+		{
+			"entity": "user",
+			"columns": {
+				"username": "m.cameron",
+				"password": "$2a$05$NkqU5GCOGvczzXHuMzRSiOUuQ4fLbu04VokfGgRMECtlpK/HhmMoC",
+				"email": "m.cameron@node.com",
+				"firstName": "Matt",
+				"lastName": "Cameron"
+			},
+			"returning": "id"
+		},
+		{
+			"entity": "user",
+			"columns": {
+				"username": "s.gossard",
+				"password": "$2a$05$uWpb7LdWCHICDnHN8jUgZeB001YhLBGtK0s5ueZw6nL9cqtPbzMRu",
+				"email": "s.gossard@node.com",
+				"firstName": "Stone",
+				"lastName": "Gossard"
+			},
+			"returning": "id"
+		},
+		{
+			"entity": "client",
+			"columns": {
+				"name": "dashboard",
+				"secret": "a1l4PsbkgQHgZzaN1lFQSw==",
+				"description": "the dashboard client application",
+				"domain": "localhost"
+			},
+			"returning": "id"
+		}
+	]
+}

@@ -16,8 +16,7 @@ Configuration.prototype.getEnvironment = function() {
 }
 
 Configuration.prototype.switchEnvironment = function() {
-  var env = this._environment;
-
+  var self = this;
   return new Promise(function(resolve, reject) {
     var prompt = inquirer.createPromptModule();
 
@@ -30,7 +29,7 @@ Configuration.prototype.switchEnvironment = function() {
           'development',
           'production'
         ],
-        default: env
+        default: self._environment
       }
     ];
 
@@ -43,7 +42,7 @@ Configuration.prototype.switchEnvironment = function() {
           console.error(err.message);
           return;
         }
-        return resolve('Switched config environment from ' + env + ' to ' + this._environment);
+        return resolve('Switched config environment from ' + self._environment + ' to ' + this._environment);
       });
     })
     .catch(function(err) {
@@ -53,12 +52,11 @@ Configuration.prototype.switchEnvironment = function() {
 }
 
 Configuration.prototype.initConfig = function() {
-  var env = this._environment;
-
+  var self = this;
   return new Promise(function(resolve, reject) {
     var prompt = inquirer.createPromptModule();
 
-    var apps = nconf.get(env + ':applications');
+    var apps = nconf.get(self._environment + ':applications');
     var idemanApp = _.contains(apps, 'ideman');
     var idemanAclApp = _.contains(apps, 'ideman-acl');
 
@@ -71,7 +69,7 @@ Configuration.prototype.initConfig = function() {
           'development',
           'production'
         ],
-        default: env
+        default: self._environment
       },
       {
         type: 'checkbox',
@@ -92,19 +90,19 @@ Configuration.prototype.initConfig = function() {
         type: 'input',
         name: 'cryptoKey',
         message: 'Secret cypher key',
-        default: nconf.get(env + ':crypto:key')
+        default: nconf.get(self._environment + ':crypto:key')
       },
       {
         type: 'input',
         name: 'cryptoInputEnc',
         message: 'Input encoding for text cypher',
-        default: nconf.get(env + ':crypto:inputEncoding')
+        default: nconf.get(self._environment + ':crypto:inputEncoding')
       },
       {
         type: 'input',
         name: 'cryptoOutputEnc',
         message: 'Output encoding for text cypher',
-        default: nconf.get(env + ':crypto:outputEncoding')
+        default: nconf.get(self._environment + ':crypto:outputEncoding')
       },
       {
         type: 'list',
@@ -115,7 +113,7 @@ Configuration.prototype.initConfig = function() {
           'mysql',
           'sqlite3'
         ],
-        default: nconf.get(env + ':database:client')
+        default: nconf.get(self._environment + ':database:client')
       }
     ];
 
@@ -222,8 +220,7 @@ Configuration.prototype.initConfig = function() {
 }
 
 Configuration.prototype.initTables = function() {
-  var env = this._environment;
-
+  var self = this;
   return new Promise(function(resolve, reject) {
     var prompt = inquirer.createPromptModule();
 
@@ -232,70 +229,70 @@ Configuration.prototype.initTables = function() {
         type: 'input',
         name: 'user',
         message: 'User table name',
-        default: nconf.get(env + ':tables:entities:user:table')
+        default: nconf.get(self._environment + ':tables:entities:user:table')
       },
       {
         type: 'input',
         name: 'client',
         message: 'Client table name',
-        default: nconf.get(env + ':tables:entities:client:table')
+        default: nconf.get(self._environment + ':tables:entities:client:table')
       },
       {
         type: 'input',
         name: 'token',
         message: 'Token table name',
-        default: nconf.get(env + ':tables:entities:token:table')
+        default: nconf.get(self._environment + ':tables:entities:token:table')
       },
       {
         type: 'input',
         name: 'code',
         message: 'Code table name',
-        default: nconf.get(env + ':tables:entities:code:table')
+        default: nconf.get(self._environment + ':tables:entities:code:table')
       },
       {
         type: 'input',
         name: 'role',
         message: 'Role table name',
-        default: nconf.get(env + ':tables:entities:role:table')
+        default: nconf.get(self._environment + ':tables:entities:role:table')
       },
       {
         type: 'input',
         name: 'userRole',
         message: 'UserRole table name',
-        default: nconf.get(env + ':tables:entities:userRole:table')
+        default: nconf.get(self._environment + ':tables:entities:userRole:table')
       },
       {
         type: 'input',
         name: 'resource',
         message: 'Resource table name',
-        default: nconf.get(env + ':tables:entities:resource:table')
+        default: nconf.get(self._environment + ':tables:entities:resource:table')
       },
       {
         type: 'input',
         name: 'permission',
         message: 'Permission table name',
-        default: nconf.get(env + ':tables:entities:permission:table')
+        default: nconf.get(self._environment + ':tables:entities:permission:table')
       },
       {
         type: 'input',
         name: 'policy',
         message: 'Policy table name',
-        default: nconf.get(env + ':tables:entities:policy:table')
+        default: nconf.get(self._environment + ':tables:entities:policy:table')
       }
     ];
 
     prompt(initQuestions)
     .then(function(key, value) {
-      nconf.set(env + ':tables:prefix', '');
-      nconf.set(env + ':tables:entities:user:table', key.user);
-      nconf.set(env + ':tables:entities:client:table', key.client);
-      nconf.set(env + ':tables:entities:token:table', key.token);
-      nconf.set(env + ':tables:entities:code:table', key.code);
-      nconf.set(env + ':tables:entities:role:table', key.role);
-      nconf.set(env + ':tables:entities:userRole:table', key.userRole);
-      nconf.set(env + ':tables:entities:resource:table', key.resource);
-      nconf.set(env + ':tables:entities:permission:table', key.permission);
-      nconf.set(env + ':tables:entities:policy:table', key.policy);
+      nconf.set(self._environment + ':tables:prefix', '');
+      nconf.set(self._environment + ':tables:entities:user:table', key.user);
+      nconf.set(self._environment + ':tables:entities:client:table', key.client);
+      nconf.set(self._environment + ':tables:entities:token:table', key.token);
+      nconf.set(self._environment + ':tables:entities:code:table', key.code);
+      nconf.set(self._environment + ':tables:entities:role:table', key.role);
+      nconf.set(self._environment + ':tables:entities:userRole:table', key.userRole);
+      nconf.set(self._environment + ':tables:entities:resource:table', key.resource);
+      nconf.set(self._environment + ':tables:entities:permission:table', key.permission);
+      nconf.set(self._environment + ':tables:entities:policy:table', key.policy);
     })
     .then(function() {
       nconf.save(function (err) {
