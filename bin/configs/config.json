@@ -1,26 +1,13 @@
 {
   "current": "development",
   "development": {
-    "applications": [
-      "ideman",
-      "ideman-acl"
-    ],
+    "applications": null,
     "crypto": {
       "key": "o!rDE(Qbrq7u4OV",
       "inputEncoding": "utf8",
       "outputEncoding": "base64"
     },
-    "database": {
-      "client": "mysql",
-      "useNullAsDefault": true,
-      "connection": {
-        "host": "localhost",
-        "user": "root",
-        "password": "root",
-        "database": "ideman",
-        "filename": ""
-      }
-    },
+    "database": null,
     "tables": {
       "prefix": "",
       "entities": {
