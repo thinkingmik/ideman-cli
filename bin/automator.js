@@ -151,11 +151,11 @@ Automator.prototype.getUserData = function() {
       key.enabled = (key.enabled === 'true') ? 1 : 0;
       if (key.password) {
         return cryptoManager
-          .crypt(key.password)
-          .then(function(hash) {
-            key.password = hash;
-            return key;
-          })
+        .crypt(key.password)
+        .then(function(hash) {
+          key.password = hash;
+          return key;
+        })
       }
       return key;
     })
@@ -163,7 +163,7 @@ Automator.prototype.getUserData = function() {
       var data = {
         tablename: self._config.tables.prefix + self._config.tables.entities.user.table,
         returning: 'id',
-        columns: key
+        columns: self.setNullValue(key)
       }
       return resolve(data);
     })
@@ -213,13 +213,13 @@ Automator.prototype.getClientData = function() {
     prompt(initQuestions)
     .then(function(key, value) {
       key.enabled = (key.enabled === 'true') ? 1 : 0;
-      if (key.password) {
+      if (key.secret) {
         return cryptoManager
-          .cypher(key.secret, self._config.crypto.key, self._config.crypto.inputEncoding, self._config.crypto.outputEncoding)
-          .then(function(hash) {
-            key.secret = hash;
-            return key;
-          })
+        .cypher(key.secret, self._config.crypto.key, self._config.crypto.inputEncoding, self._config.crypto.outputEncoding)
+        .then(function(hash) {
+          key.secret = hash;
+          return key;
+        })
       }
       return key;
     })
@@ -227,7 +227,7 @@ Automator.prototype.getClientData = function() {
       var data = {
         tablename: self._config.tables.prefix + self._config.tables.entities.client.table,
         returning: 'id',
-        columns: key
+        columns: self.setNullValue(key)
       }
       return resolve(data);
     })
@@ -285,7 +285,7 @@ Automator.prototype.getTokenData = function() {
       var data = {
         tablename: self._config.tables.prefix + self._config.tables.entities.token.table,
         returning: 'id',
-        columns: key
+        columns: self.setNullValue(key)
       }
       return resolve(data);
     })
@@ -324,7 +324,7 @@ Automator.prototype.getCodeData = function() {
       var data = {
         tablename: self._config.tables.prefix + self._config.tables.entities.code.table,
         returning: 'id',
-        columns: key
+        columns: self.setNullValue(key)
       }
       return resolve(data);
     })
@@ -369,7 +369,7 @@ Automator.prototype.getRoleData = function() {
       var data = {
         tablename: self._config.tables.prefix + self._config.tables.entities.role.table,
         returning: 'id',
-        columns: key
+        columns: self.setNullValue(key)
       }
       return resolve(data);
     })
@@ -425,7 +425,7 @@ Automator.prototype.getUserRoleData = function() {
       var data = {
         tablename: self._config.tables.prefix + self._config.tables.entities.userRole.table,
         returning: 'id',
-        columns: key
+        columns: self.setNullValue(key)
       }
       return resolve(data);
     })
@@ -459,7 +459,7 @@ Automator.prototype.getPermissionData = function() {
       var data = {
         tablename: self._config.tables.prefix + self._config.tables.entities.permission.table,
         returning: 'id',
-        columns: key
+        columns: self.setNullValue(key)
       }
       return resolve(data);
     })
@@ -493,7 +493,7 @@ Automator.prototype.getResourceData = function() {
       var data = {
         tablename: self._config.tables.prefix + self._config.tables.entities.resource.table,
         returning: 'id',
-        columns: key
+        columns: self.setNullValue(key)
       }
       return resolve(data);
     })
@@ -550,7 +550,7 @@ Automator.prototype.getPolicyData = function() {
       var data = {
         tablename: self._config.tables.prefix + self._config.tables.entities.policy.table,
         returning: 'id',
-        columns: key
+        columns: self.setNullValue(key)
       }
       return resolve(data);
     })
@@ -590,6 +590,18 @@ Automator.prototype.getClause = function(entity) {
       return reject(err);
     });
   });
+}
+
+Automator.prototype.setNullValue = function(keys) {
+  if (!keys) {
+    return null;
+  }
+  for (var el in keys) {
+    if (keys[el] == 'null' || keys[el] == 'NULL') {
+      keys[el] = null;
+    }
+  }
+  return keys;
 }
 
 exports = module.exports = Automator;

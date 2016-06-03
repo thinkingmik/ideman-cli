@@ -1,6 +1,5 @@
 #! /usr/bin/env node
 var _ = require('underscore');
-var program = require('commander');
 var Configuration = require('./configuration');
 var Automator = require('./automator');
 var Promise = require('bluebird');
@@ -158,7 +157,7 @@ var manageInitDbCmd = function (arg, force) {
 var manageListCmd = function(arg) {
   var settings = Configuration.getConfig(arg);
   if (settings) {
-    printSuccess(settings);
+    printSuccess(JSON.stringify(settings));
     process.exit(0);
   }
   else {
@@ -408,145 +407,140 @@ var manageDeleteCmd = function (arg) {
   }
 
   automator.getClause(arg)
-    .then(function(item) {
-      if (!item.clause) {
-        return prompt(secureQuestions)
-          .then(function(key) {
-            if (key.drop) {
-              return item;
-            }
-            return null;
-          });
-      }
-      return item;
-    })
-    .then(function(item) {
-      if (!item) {
-        printSuccess('No rows deleted');
-        process.exit(0);
-      }
-      return automator.remove(item.tablename, item.clause, item.returning);
-    })
-    .then(function(ret) {
-      printSuccess('Affected rows: ' + ret);
+  .then(function(item) {
+    if (!item.clause) {
+      return prompt(secureQuestions)
+      .then(function(key) {
+        if (key.drop) {
+          return item;
+        }
+        return null;
+      });
+    }
+    return item;
+  })
+  .then(function(item) {
+    if (!item) {
+      printSuccess('No rows deleted');
       process.exit(0);
+    }
+    return automator.remove(item.tablename, item.clause, item.returning);
+  })
+  .then(function(ret) {
+    printSuccess('Affected rows: ' + ret);
+    process.exit(0);
+  })
+  .catch(function(err) {
+    printError(err.message);
+    process.exit(1);
+  });
+}
+
+var args = process.argv.slice(2);
+var cmd = args[0];
+var arg1 = args[1] || null;
+var arg2 = args[2] || null;
+if (cmd === 'config') {
+  manageConfigCmd();
+}
+else if (cmd === 'tables') {
+  manageTablesCmd();
+}
+else if (cmd === 'reset') {
+  manageResetCmd();
+}
+else if (cmd === 'init') {
+  if (arg1 === 'force') {
+    arg1 = null;
+    arg2 = true;
+  }
+  else if (arg1 !== 'force' && arg2 === 'force') {
+    arg2 = true;
+  }
+  else {
+    arg2 = false;
+  }
+  if (Configuration.checkConfig()) {
+    manageInitDbCmd(arg1, arg2);
+  }
+  else {
+    Configuration.initConfig()
+    .then(function(ret) {
+      manageInitDbCmd(arg1, arg2);
     })
     .catch(function(err) {
       printError(err.message);
       process.exit(1);
     });
+  }
 }
-
-program.version('1.0.0')
-.arguments('<command> [argument] [key]')
-.action(function(cmd, arg, key) {
-  if (cmd === 'config') {
-    manageConfigCmd();
-  }
-  else if (cmd === 'tables') {
-    manageTablesCmd();
-  }
-  else if (cmd === 'reset') {
-    manageResetCmd();
-  }
-  else if (cmd === 'init') {
-    if (arg === 'force') {
-      arg = null;
-      key = true;
-    }
-    else if (arg !== 'force' && key === 'force') {
-      key = true;
-    }
-    else {
-      key = false;
-    }
-    if (Configuration.checkConfig()) {
-      manageInitDbCmd(arg, key);
-    }
-    else {
-      Configuration.initConfig()
-      .then(function(ret) {
-        manageInitDbCmd(arg, key);
-      })
-      .catch(function(err) {
-        printError(err.message);
-        process.exit(1);
-      });
-    }
-  }
-  else if (cmd === 'list') {
-    manageListCmd(arg);
-  }
-  else if (cmd === 'drop') {
-    manageDropDbCmd();
-  }
-  else if (cmd === 'env') {
-    manageEnvironmentCmd();
-  }
-  else if (cmd === 'switch') {
-    manageSwitchCmd();
-  }
-  else if (cmd === 'cypher') {
-    manageCypherCmd();
-  }
-  else if (cmd === 'decypher') {
-    manageDecypherCmd();
-  }
-  else if (cmd === 'crypt') {
-    manageCryptCmd();
-  }
-  else if (cmd === 'import') {
-    if (Configuration.checkConfig()) {
-      manageImportCmd(arg);
-    }
-    else {
-      Configuration.initConfig()
-      .then(function(ret) {
-        manageImportCmd(arg);
-      })
-      .catch(function(err) {
-        printError(err.message);
-        process.exit(1);
-      });
-    }
-  }
-  else if (cmd === 'insert') {
-    if (Configuration.checkConfig()) {
-      manageInsertCmd(arg);
-    }
-    else {
-      Configuration.initConfig()
-      .then(function(ret) {
-        manageInsertCmd(arg);
-      })
-      .catch(function(err) {
-        printError(err.message);
-        process.exit(1);
-      });
-    }
-  }
-  else if (cmd === 'delete') {
-    if (Configuration.checkConfig()) {
-      manageDeleteCmd(arg);
-    }
-    else {
-      Configuration.initConfig()
-      .then(function(ret) {
-        manageDeleteCmd(arg);
-      })
-      .catch(function(err) {
-        printError(err.message);
-        process.exit(1);
-      });
-    }
+else if (cmd === 'list') {
+  manageListCmd(arg1);
+}
+else if (cmd === 'drop') {
+  manageDropDbCmd();
+}
+else if (cmd === 'env') {
+  manageEnvironmentCmd();
+}
+else if (cmd === 'switch') {
+  manageSwitchCmd();
+}
+else if (cmd === 'cypher') {
+  manageCypherCmd();
+}
+else if (cmd === 'decypher') {
+  manageDecypherCmd();
+}
+else if (cmd === 'crypt') {
+  manageCryptCmd();
+}
+else if (cmd === 'import') {
+  if (Configuration.checkConfig()) {
+    manageImportCmd(arg1);
   }
   else {
-    printError('Command must be one of: config, tables, reset, init, list, env, switch, insert, delete, import, cypher, decypher, crypt');
-    process.exit(1);
+    Configuration.initConfig()
+    .then(function(ret) {
+      manageImportCmd(arg1);
+    })
+    .catch(function(err) {
+      printError(err.message);
+      process.exit(1);
+    });
   }
-})
-.parse(process.argv);
-
-if (!process.args) {
-
+}
+else if (cmd === 'insert') {
+  if (Configuration.checkConfig()) {
+    manageInsertCmd(arg1);
+  }
+  else {
+    Configuration.initConfig()
+    .then(function(ret) {
+      manageInsertCmd(arg1);
+    })
+    .catch(function(err) {
+      printError(err.message);
+      process.exit(1);
+    });
+  }
+}
+else if (cmd === 'delete') {
+  if (Configuration.checkConfig()) {
+    manageDeleteCmd(arg1);
+  }
+  else {
+    Configuration.initConfig()
+    .then(function(ret) {
+      manageDeleteCmd(arg1);
+    })
+    .catch(function(err) {
+      printError(err.message);
+      process.exit(1);
+    });
+  }
+}
+else {
+  printError('Command must be one of: config, tables, reset, init, list, env, switch, insert, delete, import, cypher, decypher, crypt');
+  process.exit(1);
 }
