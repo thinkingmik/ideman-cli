@@ -46,7 +46,7 @@ $ ideman-cli config
 ```
 ---------------------------------------
 
-## <a name="tables"></a>tables.
+## <a name="tables"></a>tables
 Initializes tables names.
 
 __Example__
