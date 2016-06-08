@@ -16,7 +16,7 @@ $ npm install -g ideman-cli
 ```
 
 # <a name="usage"></a>Usage
-[`ideman-cli`] provides a set of interactive commands that can be used from command line:
+`ideman-cli` provides a set of interactive commands that can be used from command line:
 ```
 $ ideman-cli <command> [arguments]
 ```
