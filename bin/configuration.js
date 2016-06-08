@@ -5,7 +5,7 @@ var inquirer = require('inquirer');
 var Promise = require('bluebird');
 
 function Configuration() {
-  this._file = './configs/config.json';
+  this._file = __dirname + '/configs/config.json';
   nconf.env().argv();
   nconf.file(this._file);
   this._environment = nconf.get('current') || 'development';
@@ -111,6 +111,7 @@ Configuration.prototype.initConfig = function() {
         choices: [
           'pg',
           'mysql',
+          'mariasql',
           'sqlite3'
         ],
         default: nconf.get(self._environment + ':database:client')
@@ -172,6 +173,33 @@ Configuration.prototype.initConfig = function() {
         }
       ];
 
+      var mariasqlQuestions = [
+        {
+          type: 'input',
+          name: 'host',
+          message: 'Host',
+          default: nconf.get(this._environment + ':database:connection:host')
+        },
+        {
+          type: 'input',
+          name: 'username',
+          message: 'User',
+          default: nconf.get(this._environment + ':database:connection:user')
+        },
+        {
+          type: 'password',
+          name: 'password',
+          message: 'Password',
+          default: nconf.get(this._environment + ':database:connection:password')
+        },
+        {
+          type: 'input',
+          name: 'db',
+          message: 'Database',
+          default: nconf.get(this._environment + ':database:connection:db')
+        }
+      ];
+
       if (key.dbclient === 'pg') {
         nconf.set(this._environment + ':database:client', key.dbclient);
         nconf.set(this._environment + ':database:useNullAsDefault', true);
@@ -189,7 +217,21 @@ Configuration.prototype.initConfig = function() {
           nconf.set(this._environment + ':database:connection:user', key.username);
           nconf.set(this._environment + ':database:connection:password', key.password);
           nconf.set(this._environment + ':database:connection:database', key.database);
-          nconf.set(this._environment + ':database:connection:filename', '');
+          nconf.set(this._environment + ':database:connection:db', null);
+          nconf.set(this._environment + ':database:connection:filename', null);
+        });
+      }
+      else if (key.dbclient === 'mariasql') {
+        nconf.set(this._environment + ':database:client', key.dbclient);
+        nconf.set(this._environment + ':database:useNullAsDefault', true);
+        return prompt(mariasqlQuestions)
+        .then(function(key, value) {
+          nconf.set(this._environment + ':database:connection:host', key.host);
+          nconf.set(this._environment + ':database:connection:user', key.username);
+          nconf.set(this._environment + ':database:connection:password', key.password);
+          nconf.set(this._environment + ':database:connection:database', null);
+          nconf.set(this._environment + ':database:connection:db', key.db);
+          nconf.set(this._environment + ':database:connection:filename', null);
         });
       }
       else if (key.dbclient === 'sqlite3') {
@@ -197,10 +239,11 @@ Configuration.prototype.initConfig = function() {
         nconf.set(this._environment + ':database:useNullAsDefault', true);
         return prompt(sqliteQuestions)
         .then(function(key, value) {
-          nconf.set(this._environment + ':database:connection:host', '');
-          nconf.set(this._environment + ':database:connection:user', '');
-          nconf.set(this._environment + ':database:connection:password', '');
-          nconf.set(this._environment + ':database:connection:database', '');
+          nconf.set(this._environment + ':database:connection:host', null);
+          nconf.set(this._environment + ':database:connection:user', null);
+          nconf.set(this._environment + ':database:connection:password', null);
+          nconf.set(this._environment + ':database:connection:database', null);
+          nconf.set(this._environment + ':database:connection:db', null);
           nconf.set(this._environment + ':database:connection:filename', key.filename);
         });
       }
@@ -225,6 +268,12 @@ Configuration.prototype.initTables = function() {
     var prompt = inquirer.createPromptModule();
 
     var initQuestions = [
+      {
+        type: 'input',
+        name: 'prefix',
+        message: 'Tables prefix',
+        default: nconf.get(self._environment + ':tables:prefix')
+      },
       {
         type: 'input',
         name: 'user',
@@ -283,7 +332,7 @@ Configuration.prototype.initTables = function() {
 
     prompt(initQuestions)
     .then(function(key, value) {
-      nconf.set(self._environment + ':tables:prefix', '');
+      nconf.set(self._environment + ':tables:prefix', key.prefix);
       nconf.set(self._environment + ':tables:entities:user:table', key.user);
       nconf.set(self._environment + ':tables:entities:client:table', key.client);
       nconf.set(self._environment + ':tables:entities:token:table', key.token);
