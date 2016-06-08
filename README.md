@@ -30,7 +30,7 @@ The availables commands are:
 * [switch](#switch)
 * [init](#init)
 * [insert](#insert)
-* [delete](delete)
+* [delete](#delete)
 * [import](#import)
 * [cypher](#cypher)
 * [decypher](#decypher)
