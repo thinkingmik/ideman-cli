@@ -87,6 +87,17 @@ Configuration.prototype.initConfig = function() {
         ]
       },
       {
+        type: 'list',
+        name: 'userPasswordEnc',
+        message: 'Users password cryptation',
+        choices: [
+          'bcrypt',
+          'crypto',
+          'none'
+        ],
+        default: nconf.get(self._environment + ':userPasswordEnc')
+      },
+      {
         type: 'input',
         name: 'cryptoKey',
         message: 'Secret cypher key',
@@ -123,9 +134,10 @@ Configuration.prototype.initConfig = function() {
       this._environment = key.environment;
       nconf.set('current', this._environment);
       nconf.set(this._environment + ':applications', key.applications);
-      nconf.set(this._environment + ':crypto:key', key.cryptoKey);
-      nconf.set(this._environment + ':crypto:inputEncoding', key.cryptoInputEnc);
-      nconf.set(this._environment + ':crypto:outputEncoding', key.cryptoOutputEnc);
+      nconf.set(this._environment + ':userPasswordEnc', key.userPasswordEnc);
+      nconf.set(this._environment + ':crypto:key', key.cryptoKey.trim());
+      nconf.set(this._environment + ':crypto:inputEncoding', key.cryptoInputEnc.trim());
+      nconf.set(this._environment + ':crypto:outputEncoding', key.cryptoOutputEnc.trim());
 
       var connection = nconf.get(this._environment + ':database:connection');
       var pgQuestions = [
@@ -205,7 +217,7 @@ Configuration.prototype.initConfig = function() {
         nconf.set(this._environment + ':database:useNullAsDefault', true);
         return prompt(pgQuestions)
         .then(function(key, value) {
-          nconf.set(this._environment + ':database:connection', key.connstring);
+          nconf.set(this._environment + ':database:connection', key.connstring.trim());
         });
       }
       else if (key.dbclient === 'mysql') {
@@ -213,10 +225,10 @@ Configuration.prototype.initConfig = function() {
         nconf.set(this._environment + ':database:useNullAsDefault', true);
         return prompt(mysqlQuestions)
         .then(function(key, value) {
-          nconf.set(this._environment + ':database:connection:host', key.host);
-          nconf.set(this._environment + ':database:connection:user', key.username);
-          nconf.set(this._environment + ':database:connection:password', key.password);
-          nconf.set(this._environment + ':database:connection:database', key.database);
+          nconf.set(this._environment + ':database:connection:host', key.host.trim());
+          nconf.set(this._environment + ':database:connection:user', key.username.trim());
+          nconf.set(this._environment + ':database:connection:password', key.password.trim());
+          nconf.set(this._environment + ':database:connection:database', key.database.trim());
           nconf.set(this._environment + ':database:connection:db', null);
           nconf.set(this._environment + ':database:connection:filename', null);
         });
@@ -226,11 +238,11 @@ Configuration.prototype.initConfig = function() {
         nconf.set(this._environment + ':database:useNullAsDefault', true);
         return prompt(mariasqlQuestions)
         .then(function(key, value) {
-          nconf.set(this._environment + ':database:connection:host', key.host);
-          nconf.set(this._environment + ':database:connection:user', key.username);
-          nconf.set(this._environment + ':database:connection:password', key.password);
+          nconf.set(this._environment + ':database:connection:host', key.host.trim());
+          nconf.set(this._environment + ':database:connection:user', key.username.trim());
+          nconf.set(this._environment + ':database:connection:password', key.password.trim());
           nconf.set(this._environment + ':database:connection:database', null);
-          nconf.set(this._environment + ':database:connection:db', key.db);
+          nconf.set(this._environment + ':database:connection:db', key.db.trim());
           nconf.set(this._environment + ':database:connection:filename', null);
         });
       }
@@ -244,7 +256,7 @@ Configuration.prototype.initConfig = function() {
           nconf.set(this._environment + ':database:connection:password', null);
           nconf.set(this._environment + ':database:connection:database', null);
           nconf.set(this._environment + ':database:connection:db', null);
-          nconf.set(this._environment + ':database:connection:filename', key.filename);
+          nconf.set(this._environment + ':database:connection:filename', key.filename.trim());
         });
       }
     })
@@ -332,16 +344,16 @@ Configuration.prototype.initTables = function() {
 
     prompt(initQuestions)
     .then(function(key, value) {
-      nconf.set(self._environment + ':tables:prefix', key.prefix);
-      nconf.set(self._environment + ':tables:entities:user:table', key.user);
-      nconf.set(self._environment + ':tables:entities:client:table', key.client);
-      nconf.set(self._environment + ':tables:entities:token:table', key.token);
-      nconf.set(self._environment + ':tables:entities:code:table', key.code);
-      nconf.set(self._environment + ':tables:entities:role:table', key.role);
-      nconf.set(self._environment + ':tables:entities:userRole:table', key.userRole);
-      nconf.set(self._environment + ':tables:entities:resource:table', key.resource);
-      nconf.set(self._environment + ':tables:entities:permission:table', key.permission);
-      nconf.set(self._environment + ':tables:entities:policy:table', key.policy);
+      nconf.set(self._environment + ':tables:prefix', key.prefix.trim());
+      nconf.set(self._environment + ':tables:entities:user:table', key.user.trim());
+      nconf.set(self._environment + ':tables:entities:client:table', key.client.trim());
+      nconf.set(self._environment + ':tables:entities:token:table', key.token.trim());
+      nconf.set(self._environment + ':tables:entities:code:table', key.code.trim());
+      nconf.set(self._environment + ':tables:entities:role:table', key.role.trim());
+      nconf.set(self._environment + ':tables:entities:userRole:table', key.userRole.trim());
+      nconf.set(self._environment + ':tables:entities:resource:table', key.resource.trim());
+      nconf.set(self._environment + ':tables:entities:permission:table', key.permission.trim());
+      nconf.set(self._environment + ':tables:entities:policy:table', key.policy.trim());
     })
     .then(function() {
       nconf.save(function (err) {
@@ -362,6 +374,7 @@ Configuration.prototype.resetConfig = function(key) {
     nconf.reset(function() {
       nconf.set('current', 'development');
       nconf.set('development:applications', null);
+      nconf.set('development:userPasswordEnc', 'bcrypt');
       nconf.set('development:crypto:key', 'o!rDE(Qbrq7u4OV');
       nconf.set('development:crypto:inputEncoding', 'utf8');
       nconf.set('development:crypto:outputEncoding', 'base64');
@@ -377,6 +390,7 @@ Configuration.prototype.resetConfig = function(key) {
       nconf.set('development:tables:entities:permission:table', 'permissions');
       nconf.set('development:tables:entities:policy:table', 'policies');
       nconf.set('production:applications', null);
+      nconf.set('production:userPasswordEnc', 'bcrypt');
       nconf.set('production:crypto:key', 'o!rDE(Qbrq7u4OV');
       nconf.set('production:crypto:inputEncoding', 'utf8');
       nconf.set('production:crypto:outputEncoding', 'base64');

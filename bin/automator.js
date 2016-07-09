@@ -150,12 +150,26 @@ Automator.prototype.getUserData = function() {
     .then(function(key, value) {
       key.enabled = (key.enabled === 'true') ? 1 : 0;
       if (key.password) {
-        return cryptoManager
-        .crypt(key.password)
-        .then(function(hash) {
-          key.password = hash;
-          return key;
-        })
+        var cmode = self._config.userPasswordEnc;
+        if (cmode === 'bcrypt') {
+          return cryptoManager
+          .crypt(key.password)
+          .then(function(hash) {
+            key.password = hash;
+            return key;
+          });
+        }
+        else if (cmode === 'crypto') {
+          return cryptoManager
+          .cypher(key.password, self._config.crypto.key, self._config.crypto.inputEncoding, self._config.crypto.outputEncoding)
+          .then(function(hash) {
+            key.password = hash;
+            return key;
+          })
+        }
+        else {
+          return key.password;
+        }
       }
       return key;
     })
@@ -219,7 +233,7 @@ Automator.prototype.getClientData = function() {
         .then(function(hash) {
           key.secret = hash;
           return key;
-        })
+        });
       }
       return key;
     })
