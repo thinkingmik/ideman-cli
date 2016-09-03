@@ -1,5 +1,5 @@
 #! /usr/bin/env node
-var _ = require('underscore');
+var _ = require('lodash');
 var Configuration = require('./configuration');
 var Automator = require('./automator');
 var Promise = require('bluebird');
@@ -118,8 +118,8 @@ var manageInitDbCmd = function (arg, force) {
         printError('No applications configured');
         process.exit(1);
       }
-      var idemanApp = _.contains(config.applications, 'ideman');
-      var idemanAclApp = _.contains(config.applications, 'ideman-acl');
+      var idemanApp = _.includes(config.applications, 'ideman');
+      var idemanAclApp = _.includes(config.applications, 'ideman-acl');
       var promise = Promise.resolve(true);
       if (force) {
         promise = drop.idemanTables();
@@ -401,7 +401,7 @@ var manageDeleteCmd = function (arg) {
   ];
 
   var entities = ['user', 'client', 'token', 'code', 'role', 'userRole', 'permission', 'resource', 'policy']
-  if (!_.contains(entities, arg)) {
+  if (!_.includes(entities, arg)) {
     printError('Unknown entity type ' + arg);
     process.exit(1);
   }

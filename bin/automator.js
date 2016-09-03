@@ -17,7 +17,7 @@ Automator.prototype.importData = function(filename) {
   return new Promise(function(resolve, reject) {
     try {
       var file = fs.readFileSync(filename, 'utf8');
-      var content = JSON.parse(file);
+      var content = JSON.parse(file.replace(/^\uFEFF/, ''));
       var items = content.data;
       if (content && items) {
         var insertAll = Promise.resolve(items).each(function(item) {

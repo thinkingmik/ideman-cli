@@ -12,9 +12,16 @@
       "outputEncoding": "base64"
     },
     "database": {
-      "client": "pg",
+      "client": "mariasql",
       "useNullAsDefault": true,
-      "connection": "postgres://postgres:postgres@localhost:5432/ideman?charset=utf-8&ssl=true"
+      "connection": {
+        "host": "hyperion",
+        "user": "root",
+        "password": "root",
+        "database": null,
+        "db": "hyperion01",
+        "filename": null
+      }
     },
     "tables": {
       "prefix": "idm_",

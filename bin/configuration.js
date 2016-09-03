@@ -1,4 +1,4 @@
-var _ = require('underscore');
+var _ = require('lodash');
 var fs = require('fs');
 var nconf = require('nconf');
 var inquirer = require('inquirer');
@@ -57,8 +57,8 @@ Configuration.prototype.initConfig = function() {
     var prompt = inquirer.createPromptModule();
 
     var apps = nconf.get(self._environment + ':applications');
-    var idemanApp = _.contains(apps, 'ideman');
-    var idemanAclApp = _.contains(apps, 'ideman-acl');
+    var idemanApp = _.includes(apps, 'ideman');
+    var idemanAclApp = _.includes(apps, 'ideman-acl');
 
     var initQuestions = [
       {

@@ -1,3 +1,4 @@
+var Promise = require('bluebird');
 var Configuration = require('../configuration');
 
 var dropsIdemanTables = function() {
