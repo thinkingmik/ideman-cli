@@ -100,19 +100,25 @@ Configuration.prototype.initConfig = function() {
       {
         type: 'input',
         name: 'cryptoKey',
-        message: 'Secret cypher key',
+        message: 'Secret cipher key',
         default: nconf.get(self._environment + ':crypto:key')
       },
       {
         type: 'input',
+        name: 'cryptoAlgorithm',
+        message: 'Cipher algorithm',
+        default: nconf.get(self._environment + ':crypto:algorithm')
+      },
+      {
+        type: 'input',
         name: 'cryptoInputEnc',
-        message: 'Input encoding for text cypher',
+        message: 'Input encoding for text cipher',
         default: nconf.get(self._environment + ':crypto:inputEncoding')
       },
       {
         type: 'input',
         name: 'cryptoOutputEnc',
-        message: 'Output encoding for text cypher',
+        message: 'Output encoding for text cipher',
         default: nconf.get(self._environment + ':crypto:outputEncoding')
       },
       {
@@ -136,6 +142,7 @@ Configuration.prototype.initConfig = function() {
       nconf.set(this._environment + ':applications', key.applications);
       nconf.set(this._environment + ':userPasswordEnc', key.userPasswordEnc);
       nconf.set(this._environment + ':crypto:key', key.cryptoKey.trim());
+      nconf.set(this._environment + ':crypto:algorithm', key.cryptoAlgorithm.trim());
       nconf.set(this._environment + ':crypto:inputEncoding', key.cryptoInputEnc.trim());
       nconf.set(this._environment + ':crypto:outputEncoding', key.cryptoOutputEnc.trim());
 

@@ -14,9 +14,9 @@ var cratesUserTable = function() {
         console.log('[CREATE] create ' + tables.user.table + ' table');
         return knex.schema.createTable(prefix + tables.user.table, function(table) {
           table.bigIncrements('id').primary();
-          table.string('username', 100).notNullable().unique();
-          table.string('password', 100).notNullable();
-          table.string('email', 255).notNullable().unique();
+          table.string('username', 255).notNullable().unique();
+          table.string('password', 255).notNullable();
+          table.string('email', 255).nullable().unique();
           table.string('firstName', 255).nullable();
           table.string('lastName', 255).nullable();
           table.boolean('enabled').defaultTo(true);
@@ -51,7 +51,7 @@ var cratesIdemanTables = function() {
         console.log('[CREATE] create ' + tables.client.table + ' table');
         return knex.schema.createTableIfNotExists(prefix + tables.client.table, function(table) {
           table.bigIncrements('id').primary();
-          table.string('name', 100).notNullable().unique();
+          table.string('name', 255).notNullable().unique();
           table.string('secret', 255).notNullable();
           table.string('description', 255).nullable();
           table.string('domain', 255).nullable();

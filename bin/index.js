@@ -215,15 +215,21 @@ var manageSwitchCmd = function () {
   });
 }
 
-var manageCypherCmd = function () {
+var manageCipherCmd = function () {
   var prompt = inquirer.createPromptModule();
   var config = Configuration.getConfig();
   var initQuestions = [
     {
       type: 'input',
       name: 'cryptoKey',
-      message: 'Secret cypher key',
+      message: 'Secret cipher key',
       default: config.crypto.key
+    },
+    {
+      type: 'input',
+      name: 'cryptoAlgorithm',
+      message: 'Cipher algorithm',
+      default: config.crypto.algorithm
     },
     {
       type: 'input',
@@ -240,12 +246,12 @@ var manageCypherCmd = function () {
     {
       type: 'input',
       name: 'password',
-      message: 'Text to cypher'
+      message: 'Text to cipher'
     }
   ];
   prompt(initQuestions)
   .then(function(key, value) {
-    return cryptoManager.cypher(key.password, key.cryptoKey, key.cryptoInputEnc, key.cryptoOutputEnc)
+    return cryptoManager.cipher(key.password, key.cryptoKey, key.cryptoAlgorithm, key.cryptoInputEnc, key.cryptoOutputEnc)
     .then(function(ret) {
       printSuccess(ret);
       process.exit(0);
@@ -257,15 +263,21 @@ var manageCypherCmd = function () {
   });
 }
 
-var manageDecypherCmd = function () {
+var manageDecipherCmd = function () {
   var prompt = inquirer.createPromptModule();
   var config = Configuration.getConfig();
   var initQuestions = [
     {
       type: 'input',
       name: 'cryptoKey',
-      message: 'Secret cypher key',
+      message: 'Secret cipher key',
       default: config.crypto.key
+    },
+    {
+      type: 'input',
+      name: 'cryptoAlgorithm',
+      message: 'Cipher algorithm',
+      default: config.crypto.algorithm
     },
     {
       type: 'input',
@@ -282,12 +294,12 @@ var manageDecypherCmd = function () {
     {
       type: 'input',
       name: 'password',
-      message: 'Text to decypher'
+      message: 'Text to decipher'
     }
   ];
   prompt(initQuestions)
   .then(function(key, value) {
-    return cryptoManager.decypher(key.password, key.cryptoKey, key.cryptoInputEnc, key.cryptoOutputEnc)
+    return cryptoManager.decipher(key.password, key.cryptoKey, key.cryptoAlgorithm, key.cryptoInputEnc, key.cryptoOutputEnc)
     .then(function(ret) {
       printSuccess(ret);
       process.exit(0);
@@ -486,11 +498,11 @@ else if (cmd === 'env') {
 else if (cmd === 'switch') {
   manageSwitchCmd();
 }
-else if (cmd === 'cypher') {
-  manageCypherCmd();
+else if (cmd === 'cipher') {
+  manageCipherCmd();
 }
-else if (cmd === 'decypher') {
-  manageDecypherCmd();
+else if (cmd === 'decipher') {
+  manageDecipherCmd();
 }
 else if (cmd === 'crypt') {
   manageCryptCmd();
@@ -541,6 +553,6 @@ else if (cmd === 'delete') {
   }
 }
 else {
-  printError('Command must be one of: config, tables, reset, init, list, env, switch, insert, delete, import, cypher, decypher, crypt');
+  printError('Command must be one of: config, tables, reset, init, list, env, switch, insert, delete, import, cipher, decipher, crypt');
   process.exit(1);
 }

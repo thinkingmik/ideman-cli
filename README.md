@@ -32,8 +32,8 @@ The availables commands are:
 * [insert](#insert)
 * [delete](#delete)
 * [import](#import)
-* [cypher](#cypher)
-* [decypher](#decypher)
+* [cipher](#cipher)
+* [decipher](#decipher)
 * [crypt](#crypt)
 
 ## <a name="config"></a>config
@@ -170,25 +170,25 @@ $ ideman-cli import [path]
 ```
 ---------------------------------------
 
-## <a name="cypher"></a>cypher
-Cyphers a text.
+## <a name="cipher"></a>cipher
+Ciphers a text.
 
 
 __Example__
 
 ```
-$ ideman-cli cypher
+$ ideman-cli cipher
 ```
 ---------------------------------------
 
-## <a name="decypher"></a>decypher
-Decyphers a text.
+## <a name="decipher"></a>decipher
+Deciphers a text.
 
 
 __Example__
 
 ```
-$ ideman-cli decypher
+$ ideman-cli decipher
 ```
 ---------------------------------------
 

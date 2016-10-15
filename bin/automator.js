@@ -123,7 +123,8 @@ Automator.prototype.getUserData = function() {
       {
         type: 'input',
         name: 'email',
-        message: 'Email'
+        message: 'Email',
+        default: 'null'
       },
       {
         type: 'input',
@@ -161,7 +162,7 @@ Automator.prototype.getUserData = function() {
         }
         else if (cmode === 'crypto') {
           return cryptoManager
-          .cypher(key.password, self._config.crypto.key, self._config.crypto.inputEncoding, self._config.crypto.outputEncoding)
+          .cipher(key.password, self._config.crypto.key, self._config.crypto.algorithm, self._config.crypto.inputEncoding, self._config.crypto.outputEncoding)
           .then(function(hash) {
             key.password = hash;
             return key;
@@ -229,7 +230,7 @@ Automator.prototype.getClientData = function() {
       key.enabled = (key.enabled === 'true') ? 1 : 0;
       if (key.secret) {
         return cryptoManager
-        .cypher(key.secret, self._config.crypto.key, self._config.crypto.inputEncoding, self._config.crypto.outputEncoding)
+        .cipher(key.secret, self._config.crypto.key, self._config.crypto.algorithm, self._config.crypto.inputEncoding, self._config.crypto.outputEncoding)
         .then(function(hash) {
           key.secret = hash;
           return key;
