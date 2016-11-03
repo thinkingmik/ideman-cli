@@ -385,6 +385,7 @@ Configuration.prototype.resetConfig = function(key) {
       nconf.set('development:crypto:key', 'o!rDE(Qbrq7u4OV');
       nconf.set('development:crypto:inputEncoding', 'utf8');
       nconf.set('development:crypto:outputEncoding', 'base64');
+      nconf.set('development:crypto:algorithm', 'AES-256-CBC');
       nconf.set('development:database', null);
       nconf.set('development:tables:prefix', '');
       nconf.set('development:tables:entities:user:table', 'users');
@@ -401,6 +402,7 @@ Configuration.prototype.resetConfig = function(key) {
       nconf.set('production:crypto:key', 'o!rDE(Qbrq7u4OV');
       nconf.set('production:crypto:inputEncoding', 'utf8');
       nconf.set('production:crypto:outputEncoding', 'base64');
+      nconf.set('production:crypto:algorithm', 'AES-256-CBC');
       nconf.set('production:database', null);
       nconf.set('production:tables:prefix', '');
       nconf.set('production:tables:entities:user:table', 'users');

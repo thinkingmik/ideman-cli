@@ -1,22 +1,15 @@
 {
   "current": "development",
   "development": {
-    "applications": [
-      "ideman",
-      "ideman-acl"
-    ],
+    "applications": null,
     "userPasswordEnc": "bcrypt",
     "crypto": {
       "key": "o!rDE(Qbrq7u4OV",
-      "algorithm": "AES-256-CBC",
       "inputEncoding": "utf8",
-      "outputEncoding": "base64"
+      "outputEncoding": "base64",
+      "algorithm": "AES-256-CBC"
     },
-    "database": {
-      "client": "pg",
-      "useNullAsDefault": true,
-      "connection": "postgres://postgres:postgres@pandora.net/ideman?charset=utf-8"
-    },
+    "database": null,
     "tables": {
       "prefix": "",
       "entities": {
@@ -51,21 +44,15 @@
     }
   },
   "production": {
-    "applications": [
-      "ideman",
-      "ideman-acl"
-    ],
+    "applications": null,
     "userPasswordEnc": "bcrypt",
     "crypto": {
       "key": "o!rDE(Qbrq7u4OV",
       "inputEncoding": "utf8",
-      "outputEncoding": "base64"
+      "outputEncoding": "base64",
+      "algorithm": "AES-256-CBC"
     },
-    "database": {
-      "client": "pg",
-      "useNullAsDefault": true,
-      "connection": "postgres://postgres:postgres@hyperion:5432/hyperion01"
-    },
+    "database": null,
     "tables": {
       "prefix": "",
       "entities": {
