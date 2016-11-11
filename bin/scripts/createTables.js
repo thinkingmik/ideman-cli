@@ -127,7 +127,7 @@ var cratesIdemanAclTables = function() {
         console.log('[CREATE] create ' + tables.role.table + ' table');
         return knex.schema.createTableIfNotExists(prefix + tables.role.table, function(table) {
           table.bigIncrements('id').primary();
-          table.string('name', 100).notNullable().unique();
+          table.string('name', 255).notNullable().unique();
           table.string('description', 255).nullable();
           table.boolean('enabled').defaultTo(true);
           table.timestamp('createdAt').notNullable().defaultTo(knex.fn.now());
@@ -166,7 +166,8 @@ var cratesIdemanAclTables = function() {
         if (!exists) {
           console.log('[CREATE] create ' + tables.resource.table + ' table');
           return knex.schema.createTableIfNotExists(prefix + tables.resource.table, function(table) {
-            table.string('id', 100).primary();
+            table.bigIncrements('id').primary();
+            table.string('name', 255).notNullable().unique();
             table.string('description', 255).nullable();
             table.timestamp('createdAt').notNullable().defaultTo(knex.fn.now());
             table.timestamp('updatedAt').notNullable().nullable();
@@ -183,7 +184,8 @@ var cratesIdemanAclTables = function() {
         if (!exists) {
           console.log('[CREATE] create ' + tables.permission.table + ' table');
           return knex.schema.createTableIfNotExists(prefix + tables.permission.table, function(table) {
-            table.string('id', 50).primary();
+            table.bigIncrements('id').primary();
+            table.string('name', 255).notNullable().unique();
             table.string('description', 255).nullable();
             table.timestamp('createdAt').notNullable().defaultTo(knex.fn.now());
             table.timestamp('updatedAt').notNullable().nullable();
@@ -203,8 +205,8 @@ var cratesIdemanAclTables = function() {
             table.bigIncrements('id').primary();
             table.bigInteger('userId').nullable().unsigned().index().references('id').inTable(prefix + tables.user.table).onDelete('CASCADE').onUpdate('CASCADE');
             table.bigInteger('roleId').nullable().unsigned().index().references('id').inTable(prefix + tables.role.table).onDelete('SET NULL').onUpdate('CASCADE');
-            table.string('resourceId').notNullable().index().references('id').inTable(prefix + tables.resource.table).onDelete('CASCADE').onUpdate('CASCADE');
-            table.string('permissionId').notNullable().index().references('id').inTable(prefix + tables.permission.table).onDelete('CASCADE').onUpdate('CASCADE');
+            table.bigInteger('resourceId').notNullable().index().references('id').inTable(prefix + tables.resource.table).onDelete('CASCADE').onUpdate('CASCADE');
+            table.bigInteger('permissionId').notNullable().index().references('id').inTable(prefix + tables.permission.table).onDelete('CASCADE').onUpdate('CASCADE');
             table.unique(['userId', 'roleId', 'resourceId', 'permissionId']);
             table.timestamp('activation').nullable();
             table.timestamp('expiration').nullable();

@@ -458,7 +458,7 @@ Automator.prototype.getPermissionData = function() {
     var initQuestions = [
       {
         type: 'input',
-        name: 'id',
+        name: 'name',
         message: 'Permission name'
       },
       {
@@ -492,7 +492,7 @@ Automator.prototype.getResourceData = function() {
     var initQuestions = [
       {
         type: 'input',
-        name: 'id',
+        name: 'name',
         message: 'Resource name'
       },
       {
@@ -551,12 +551,12 @@ Automator.prototype.getPolicyData = function() {
       {
         type: 'input',
         name: 'resourceId',
-        message: 'Resource name'
+        message: 'Resource ID'
       },
       {
         type: 'input',
         name: 'permissionId',
-        message: 'Permission name'
+        message: 'Permission ID'
       }
     ];
 
