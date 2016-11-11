@@ -145,8 +145,8 @@ var cratesIdemanAclTables = function() {
           console.log('[CREATE] create usersRoles table');
           return knex.schema.createTableIfNotExists(prefix + tables.userRole.table, function(table) {
             table.bigIncrements('id').primary();
-            table.bigInteger('userId').unsigned().index().references('id').inTable(prefix + tables.user.table).onDelete('NO ACTION').onUpdate('CASCADE');
-            table.bigInteger('roleId').unsigned().index().references('id').inTable(prefix + tables.role.table).onDelete('NO ACTION').onUpdate('CASCADE');
+            table.bigInteger('userId').notNullable().unsigned().index().references('id').inTable(prefix + tables.user.table).onDelete('CASCADE').onUpdate('CASCADE');
+            table.bigInteger('roleId').notNullable().unsigned().index().references('id').inTable(prefix + tables.role.table).onDelete('SET NULL').onUpdate('CASCADE');
             table.unique(['userId', 'roleId']);
             table.boolean('main').defaultTo(false);
             table.timestamp('activation').nullable();
@@ -201,8 +201,8 @@ var cratesIdemanAclTables = function() {
           console.log('[CREATE] create ' + tables.policy.table + ' table');
           return knex.schema.createTableIfNotExists(prefix + tables.policy.table, function(table) {
             table.bigIncrements('id').primary();
-            table.bigInteger('userId').nullable().unsigned().index().references('id').inTable(prefix + tables.user.table).onDelete('NO ACTION').onUpdate('CASCADE');
-            table.bigInteger('roleId').nullable().unsigned().index().references('id').inTable(prefix + tables.role.table).onDelete('NO ACTION').onUpdate('CASCADE');
+            table.bigInteger('userId').nullable().unsigned().index().references('id').inTable(prefix + tables.user.table).onDelete('CASCADE').onUpdate('CASCADE');
+            table.bigInteger('roleId').nullable().unsigned().index().references('id').inTable(prefix + tables.role.table).onDelete('SET NULL').onUpdate('CASCADE');
             table.string('resourceId').notNullable().index().references('id').inTable(prefix + tables.resource.table).onDelete('CASCADE').onUpdate('CASCADE');
             table.string('permissionId').notNullable().index().references('id').inTable(prefix + tables.permission.table).onDelete('CASCADE').onUpdate('CASCADE');
             table.unique(['userId', 'roleId', 'resourceId', 'permissionId']);
