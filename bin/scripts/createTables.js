@@ -146,7 +146,7 @@ var cratesIdemanAclTables = function() {
           return knex.schema.createTableIfNotExists(prefix + tables.userRole.table, function(table) {
             table.bigIncrements('id').primary();
             table.bigInteger('userId').notNullable().unsigned().index().references('id').inTable(prefix + tables.user.table).onDelete('CASCADE').onUpdate('CASCADE');
-            table.bigInteger('roleId').notNullable().unsigned().index().references('id').inTable(prefix + tables.role.table).onDelete('SET NULL').onUpdate('CASCADE');
+            table.bigInteger('roleId').notNullable().unsigned().index().references('id').inTable(prefix + tables.role.table).onDelete('CASCADE').onUpdate('CASCADE');
             table.unique(['userId', 'roleId']);
             table.boolean('main').defaultTo(false);
             table.timestamp('activation').nullable();
@@ -205,8 +205,8 @@ var cratesIdemanAclTables = function() {
             table.bigIncrements('id').primary();
             table.bigInteger('userId').nullable().unsigned().index().references('id').inTable(prefix + tables.user.table).onDelete('CASCADE').onUpdate('CASCADE');
             table.bigInteger('roleId').nullable().unsigned().index().references('id').inTable(prefix + tables.role.table).onDelete('SET NULL').onUpdate('CASCADE');
-            table.bigInteger('resourceId').notNullable().index().references('id').inTable(prefix + tables.resource.table).onDelete('CASCADE').onUpdate('CASCADE');
-            table.bigInteger('permissionId').notNullable().index().references('id').inTable(prefix + tables.permission.table).onDelete('CASCADE').onUpdate('CASCADE');
+            table.bigInteger('resourceId').notNullable().unsigned().index().references('id').inTable(prefix + tables.resource.table).onDelete('CASCADE').onUpdate('CASCADE');
+            table.bigInteger('permissionId').notNullable().unsigned().index().references('id').inTable(prefix + tables.permission.table).onDelete('CASCADE').onUpdate('CASCADE');
             table.unique(['userId', 'roleId', 'resourceId', 'permissionId']);
             table.timestamp('activation').nullable();
             table.timestamp('expiration').nullable();
