@@ -1,24 +1,17 @@
 {
   "current": "development",
   "development": {
-    "applications": [
-      "ideman",
-      "ideman-acl"
-    ],
-    "userPasswordEnc": "crypto",
+    "applications": null,
+    "userPasswordEnc": "bcrypt",
     "crypto": {
       "key": "o!rDE(Qbrq7u4OV",
       "inputEncoding": "utf8",
       "outputEncoding": "base64",
       "algorithm": "AES-256-CBC"
     },
-    "database": {
-      "client": "pg",
-      "useNullAsDefault": true,
-      "connection": "postgres://postgres:postgres@pandora.net/ideman?charset=utf-8"
-    },
+    "database": null,
     "tables": {
-      "prefix": "idm_",
+      "prefix": "",
       "entities": {
         "user": {
           "table": "users"

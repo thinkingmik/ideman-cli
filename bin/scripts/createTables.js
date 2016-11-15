@@ -20,6 +20,7 @@ var cratesUserTable = function() {
           table.string('firstName', 255).nullable();
           table.string('lastName', 255).nullable();
           table.boolean('enabled').defaultTo(true);
+          table.timestamp('lastLogin').nullable();
           table.timestamp('createdAt').notNullable().defaultTo(knex.fn.now());
           table.timestamp('updatedAt').nullable();
           table.unique(['username', 'password']);
